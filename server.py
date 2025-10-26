@@ -17,7 +17,7 @@ def generate_otp():
     return str(random.randint(100000, 999999))
 
 def send_otp(phone, otp):
-    api_key = "3Qacp7SlYUrRebNfw2qKvXFZhL8dj9PBMxJAgmoyICtizn6TuHudcRKJeD8NSIsjrvTFBV6h7PlnpiOg"
+    api_key = os.environ.get("FAST2SMS_API_KEY")
     message = f"Your OTP is {otp}"
     url = f"https://www.fast2sms.com/dev/bulkV2?authorization={api_key}&route=v3&message={message}&numbers={phone}"
     try:
@@ -45,7 +45,9 @@ def verify_otp():
         return jsonify({"success": False, "message": "Invalid OTP"}), 400
     token = auth.create_custom_token(phone)
     del otp_store[phone]
-    return jsonify({"success": True, "firebaseToken": token.decode('utf-8'))
+    return jsonify({"success": True, "firebaseToken": token.decode('utf-8')})
+  
+    
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
